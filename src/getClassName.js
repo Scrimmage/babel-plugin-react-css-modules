@@ -87,14 +87,21 @@ export default (styleNameValue: string, styleModuleImportMap: StyleModuleImportM
           '\' without importing at least one stylesheet.');
       }
 
-      if (styleModuleImportMapKeys.length > 1) {
-        throw new Error('Cannot use anonymous style name \'' + styleName +
-          '\' with more than one stylesheet import.');
-      }
+      const mappedClassNames = styleModuleImportMapKeys.map((importKey) => {
+        return styleModuleImportMap[importKey][styleName];
+      }).filter(Boolean);
 
-      const styleModuleMap: StyleModuleMapType = styleModuleImportMap[styleModuleImportMapKeys[0]];
+      if (mappedClassNames.length > 1) {
+        const importKeysWithMatches = styleModuleImportMapKeys.map((importKey) => {
+          return styleModuleImportMap[importKey][styleName] && importKey;
+        }).filter(Boolean);
 
-      if (!styleModuleMap[styleName]) {
+        throw new Error('Cannot resolve styleName "' + styleName + '"' +
+          'as it is present in multiple imports: ' + importKeysWithMatches.join(', ') + '.' +
+          '\n\n\tYou can resolve this by using a named import, e.g:' +
+          '\n\n\t\timport foo from "' + importKeysWithMatches[0] + '";' +
+          '\n\n\t\t<div styleName="foo.' + styleName + '" />');
+      } else if (mappedClassNames.length === 0) {
         if (handleMissingStyleName === 'throw') {
           throw new Error('Could not resolve the styleName \'' + styleName + '\'.');
         }
@@ -104,11 +111,10 @@ export default (styleNameValue: string, styleModuleImportMap: StyleModuleImportM
         }
       }
 
-      return styleModuleMap[styleName];
+      return mappedClassNames[0];
     })
-    .filter((className) => {
-      // Remove any styles which could not be found (if handleMissingStyleName === 'ignore')
-      return className;
-    })
+
+    // Remove any styles which could not be found (if handleMissingStyleName === 'ignore')
+    .filter(Boolean)
     .join(' ');
 };
