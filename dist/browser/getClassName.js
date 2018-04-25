@@ -81,7 +81,7 @@ exports.default = function (styleNameValue, styleModuleImportMap, options) {
         return styleModuleImportMap[importKey][styleName] && importKey;
       }).filter(Boolean);
 
-      throw new Error('Cannot resolve styleName "' + styleName + '" ' + 'because it is present in multiple imports:' + '\n\n\t' + importKeysWithMatches.join('\n\t') + '\\nnYou can resolve this by using a named import, e.g:' + '\n\n\timport foo from "' + importKeysWithMatches[0] + '";' + '\n\t<div styleName="foo.' + styleName + '" />' + '\n\n');
+      throw new Error('Cannot resolve styleName "' + styleName + '" ' + 'because it is present in multiple imports:' + '\n\n\t' + importKeysWithMatches.join('\n\t') + '\n\nYou can resolve this by using a named import, e.g:' + '\n\n\timport foo from "' + importKeysWithMatches[0] + '";' + '\n\t<div styleName="foo.' + styleName + '" />' + '\n\n');
     } else if (mappedClassNames.length === 0) {
       if (handleMissingStyleName === 'throw') {
         throw new Error('Could not resolve the styleName \'' + styleName + '\'.');
