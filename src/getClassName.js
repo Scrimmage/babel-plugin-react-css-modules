@@ -99,7 +99,7 @@ export default (styleNameValue: string, styleModuleImportMap: StyleModuleImportM
         throw new Error('Cannot resolve styleName "' + styleName + '" ' +
           'because it is present in multiple imports:' +
           '\n\n\t' + importKeysWithMatches.join('\n\t') +
-          '\\nnYou can resolve this by using a named import, e.g:' +
+          '\n\nYou can resolve this by using a named import, e.g:' +
           '\n\n\timport foo from "' + importKeysWithMatches[0] + '";' +
           '\n\t<div styleName="foo.' + styleName + '" />' +
           '\n\n');
